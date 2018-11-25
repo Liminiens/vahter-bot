@@ -51,17 +51,15 @@ namespace JobsBot.Bot
 
         public void Start()
         {
-            _client.OnReceiveError += (sender, args) =>
-                Console.WriteLine(args.ApiRequestException.Message);
-            _client.OnReceiveGeneralError += (sender, args) =>
-                Console.WriteLine(args.Exception.Message);
+            _client.OnReceiveError += (sender, args) => Console.WriteLine(args.ApiRequestException);
+            _client.OnReceiveGeneralError += (sender, args) => Console.WriteLine(args.Exception);
             _client.OnMessage += (sender, args) => AsyncContext.Run(() => OnBotMessage(sender, args));
             _client.OnMessageEdited += (sender, args) => AsyncContext.Run(() => OnBotMessage(sender, args));
             _client.OnCallbackQuery += (sender, args) => AsyncContext.Run(() => OnCallbackQuery(sender, args));
             _client.StartReceiving();
         }
 
-        private async Task SendUnbanKeyboard(User user, string text)
+        private Task SendUnbanKeyboard(User user, string text)
         {
             var builder = new StringBuilder();
             builder.AppendFormat(
@@ -81,10 +79,7 @@ namespace JobsBot.Bot
                 }
             });
 
-            await _client.SendTextMessageAsync(
-                _configuration.ChannelId,
-                builder.ToString(),
-                replyMarkup: inlineKeyboard);
+            return _client.SendTextMessageAsync(_configuration.ChannelId, builder.ToString(), replyMarkup: inlineKeyboard);
         }
 
         private Task Restrict(int userId)
@@ -106,7 +101,6 @@ namespace JobsBot.Bot
                 {
                     var id = Int32.Parse(query.Data);
                     await UnRestrict(id);
-
                     await _client.SendTextMessageAsync(_configuration.ChannelId, $"Разбанил {id}");
                 }
 
