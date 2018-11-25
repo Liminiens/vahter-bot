@@ -48,6 +48,10 @@ namespace JobsBot.Bot
 
         public void Start()
         {
+            _client.OnReceiveError += (sender, args) =>
+                Console.WriteLine(args.ApiRequestException.Message);
+            _client.OnReceiveGeneralError += (sender, args) =>
+                Console.WriteLine(args.Exception.Message);
             _client.OnMessage += OnBotMessage;
             _client.OnMessageEdited += OnBotMessage;
             _client.OnCallbackQuery += OnCallbackQuery;
@@ -90,30 +94,45 @@ namespace JobsBot.Bot
             return _client.RestrictChatMemberAsync(_configuration.ChatId, userId, DateTime.UtcNow.AddMinutes(1), true, true, true, true);
         }
 
-        private async void OnCallbackQuery(object sender, CallbackQueryEventArgs e)
+        private async void OnCallbackQuery(object sender, CallbackQueryEventArgs args)
         {
-            var query = e.CallbackQuery;
-            if (query.Data != "Пёс с ним")
+            try
             {
-                var id = Int32.Parse(query.Data);
-                await UnRestrict(id);
+                var query = args.CallbackQuery;
+                if (query.Data != "Пёс с ним")
+                {
+                    var id = Int32.Parse(query.Data);
+                    await UnRestrict(id);
 
-                await _client.SendTextMessageAsync(_configuration.ChannelId, $"Разбанил {id}");
+                    await _client.SendTextMessageAsync(_configuration.ChannelId, $"Разбанил {id}");
+                }
+
+                if (query.Message != null)
+                {
+                    await _client.DeleteMessageAsync(query.Message.Chat.Id, query.Message.MessageId);
+                }
+
             }
-            
-            if (query.Message != null)
+            catch (Exception exception)
             {
-                await _client.DeleteMessageAsync(query.Message.Chat.Id, query.Message.MessageId);
+                Console.WriteLine(exception);
             }
         }
 
         private async void OnBotMessage(object sender, MessageEventArgs args)
         {
-            var message = args.Message;
-            var text = message.Text ?? message.Caption;
-            if (message.Chat.Id == _configuration.ChatId && text != null)
+            try
             {
-                await OnChatMessage(message, text);
+                var message = args.Message;
+                var text = message.Text ?? message.Caption;
+                if (message.Chat.Id == _configuration.ChatId && text != null)
+                {
+                    await OnChatMessage(message, text);
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
             }
         }
 

@@ -10,11 +10,19 @@ namespace JobsBot
     {
         static async Task Main(string[] args)
         {
-            var settings = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "settings.json"));
-            var configuration = JsonConvert.DeserializeObject<BotConfiguration>(settings);
-            var bot = new BotClient(configuration);
-            bot.Start();
-            await Console.In.ReadLineAsync();
+            try
+            {
+                var settings = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "settings.json"));
+                var configuration = JsonConvert.DeserializeObject<BotConfiguration>(settings);
+                var bot = new BotClient(configuration);
+                bot.Start();
+                await Console.In.ReadLineAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }
