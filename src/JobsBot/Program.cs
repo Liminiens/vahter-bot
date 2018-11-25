@@ -8,7 +8,7 @@ namespace JobsBot
 {
     class Program
     {
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
             try
             {
@@ -16,7 +16,8 @@ namespace JobsBot
                 var configuration = JsonConvert.DeserializeObject<BotConfiguration>(settings);
                 var bot = new BotClient(configuration);
                 bot.Start();
-                await Console.In.ReadLineAsync();
+                Console.WriteLine("Started bot");
+                Console.In.ReadLineAsync().GetAwaiter().GetResult();
             }
             catch (Exception e)
             {
