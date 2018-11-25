@@ -47,6 +47,8 @@ namespace JobsBot.Bot
             }
         }
 
+        public Task<User> GetMeAsync() => _client.GetMeAsync();
+
         public void Start()
         {
             _client.OnReceiveError += (sender, args) =>
