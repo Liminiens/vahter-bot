@@ -14,5 +14,5 @@ RUN dotnet publish -c Release -o out
 # Build runtime image
 FROM microsoft/dotnet:2.1-aspnetcore-runtime-alpine
 WORKDIR /app
-COPY --from=build-dotnet /app/out .
+COPY --from=build-dotnet /app/src/JobsBot/out .
 ENTRYPOINT ["dotnet", "JobsBot.dll"]
