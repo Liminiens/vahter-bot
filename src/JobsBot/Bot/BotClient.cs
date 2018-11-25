@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Nito.AsyncEx;
 using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types;
@@ -52,9 +53,9 @@ namespace JobsBot.Bot
                 Console.WriteLine(args.ApiRequestException.Message);
             _client.OnReceiveGeneralError += (sender, args) =>
                 Console.WriteLine(args.Exception.Message);
-            _client.OnMessage += OnBotMessage;
-            _client.OnMessageEdited += OnBotMessage;
-            _client.OnCallbackQuery += OnCallbackQuery;
+            _client.OnMessage += (sender, args) => AsyncContext.Run(() => OnBotMessage(sender, args));
+            _client.OnMessageEdited += (sender, args) => AsyncContext.Run(() => OnBotMessage(sender, args));
+            _client.OnCallbackQuery += (sender, args) => AsyncContext.Run(() => OnCallbackQuery(sender, args));
             _client.StartReceiving();
         }
 
