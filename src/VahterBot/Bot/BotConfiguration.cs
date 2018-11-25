@@ -1,4 +1,4 @@
-﻿namespace JobsBot.Bot
+﻿namespace VahterBot.Bot
 {
     public class BotConfiguration
     {

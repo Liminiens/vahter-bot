@@ -2,11 +2,10 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using JobsBot.Bot;
 using Newtonsoft.Json;
-using Nito.AsyncEx;
+using VahterBot.Bot;
 
-namespace JobsBot
+namespace VahterBot
 {
     class Program
     {
@@ -21,6 +20,7 @@ namespace JobsBot
                 Console.WriteLine($"Self id: {self.Id}");
                 bot.Start();
                 Console.WriteLine("Started bot");
+
                 await Task.Delay(Timeout.Infinite);
             }
             catch (Exception e)

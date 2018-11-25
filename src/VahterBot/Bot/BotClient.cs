@@ -1,15 +1,15 @@
-﻿using MihaZupan;
-using System;
+﻿using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MihaZupan;
 using Nito.AsyncEx;
 using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace JobsBot.Bot
+namespace VahterBot.Bot
 {
     public class BotClient
     {
